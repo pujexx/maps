@@ -11,7 +11,18 @@ class Home extends CI_Controller {
         $this->form_validation->set_rules("username", "username", "required");
         $this->form_validation->set_rules("password", "password", "required");
         if ($this->form_validation->run() == true) {
-            
+
+            $username = $this->input->post("username", true);
+            $password = $this->input->post("password", true);
+            if ($this->m_users->proseslogin($username, $password) == true) {
+                $user = $this->m_users->getcurrentuser($username, $password);
+                $this->session->set_userdata("id", $user['id']);
+                $this->session->set_userdata("login", true);
+                redirect("dashboard");
+            } else {
+                $this->session->set_flashdata("notif", "<center>system error</center>");
+                redirect("home");
+            }
         }
         $data['content'] = "login";
         $this->load->view("template", $data);
@@ -45,13 +56,23 @@ class Home extends CI_Controller {
         $this->load->view("template", $data);
     }
 
-    function _login($username, $password) {
+    function login($username, $password) {
         if ($this->m_users->proseslogin($username, $password) == true) {
-            
+            $user = $this->m_users->getcurrentuser($username, $password);
+            $this->session->set_userdata("id", $user['id']);
+            $this->session->set_userdata("login", true);
+            return true;
         } else {
             $this->session->set_flashdata("notif", "<center>system error</center>");
-            redirect("home");
+            return false;
         }
+    }
+
+    function logout() {
+        $this->session->set_flashdata("notif", "<center>Logout</center>");
+        $this->session->unset_userdata("id");
+        $this->session->unset_userdata("login");
+        redirect("home");
     }
 
 }

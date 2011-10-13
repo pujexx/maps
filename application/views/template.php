@@ -10,6 +10,14 @@
 
         <script type="text/javascript" src="<?php echo base_url("template"); ?>/js/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url("template"); ?>/js/jquery.mobile-1.0b3.min.js"></script>
+        <script type="text/javascript">
+            $(document).bind("mobileinit", function()
+            {
+                $.extend(  $.mobile , {
+                    ajaxFormsEnabled: false
+                });
+            });
+        </script>
     </head>
     <body>
 
